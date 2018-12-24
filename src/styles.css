@@ -1,0 +1,13 @@
+#stage
+{
+  position: relative;
+}
+.node
+{
+  will-change: transform;
+  box-shadow: transparent 0px 0px 1px;
+  cursor: all-scroll;
+  -webkit-user-select: none;
+  position: absolute;
+  border: 1px solid black;
+}

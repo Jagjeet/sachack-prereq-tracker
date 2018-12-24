@@ -1,0 +1,52 @@
+{
+  "courses": [ 
+    {
+      "name": "PHYSICS1", 
+      "sequenceId": "PHY",
+      "sequenceCount": "0",
+      "prereqs": ["MAT1"]
+    }, 
+		{
+			"name": "PHYSICS2", 
+      "sequenceId": "PHY",
+      "sequenceCount": "1",
+      "prereqs": ["PHYSICS1"]
+    },
+		{
+			"name": "PHYSICS3", 
+      "sequenceId": "PHY",
+      "sequenceCount": "2",
+      "prereqs": ["PHYSICS2"]
+    },
+		{
+      "name": "CIRCUITS1",
+      "sequenceId": "CIR",
+      "sequenceCount": "1",
+      "prereqs": [ ]
+    },
+    {
+      "name": "CIRCUITS2",
+      "sequenceId": "CIR",
+      "sequenceCount": "1",
+      "prereqs": [ "CIRCUITS1"]
+    },
+		{
+      "name": "CIRCUITS3",
+      "sequenceId": "CIR",
+      "sequenceCount": "2",
+      "prereqs": [ "CIRCUITS2"]
+    },
+		{
+      "name": "MAT1",
+      "sequenceId": "MAT",
+      "sequenceCount": "0",
+      "prereqs": [ ]
+    },
+		{
+			"name": "MAT2",
+      "sequenceId": "MAT",
+      "sequenceCount": "1",
+      "prereqs": ["MAT1"]
+		}
+  ]
+}

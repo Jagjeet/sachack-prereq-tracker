@@ -1,0 +1,1 @@
+A prequequisite tracker designed to make it easier to decide which courses a student is able to take at any given time. Brainstormed and begun at Sachacks.

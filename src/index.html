@@ -1,0 +1,143 @@
+<head>
+	<script src="../node_modules/plain-draggable/plain-draggable.min.js"></script>
+	<script src="../node_modules/leader-line/leader-line.min.js"></script>
+	<link rel="stylesheet" href="styles.css" media="screen" />
+</head>
+
+
+<script>
+	var xval = 100;
+	var yval = 200;
+	fetch("../data/courses.json")
+  .then(response => response.json())
+  .then(json => {
+    json['courses'].map( val =>{addNode(val.name,xval,yval); xval+=100;});
+  });
+</script>
+<div id="stage">
+  <div onclick="deleteIfDeleteModeOn(this)" ondblclick="divDblClick(this);" style="transform: translate(10px, 10px)" class="node" id="a">a</div>
+  <div onclick="deleteIfDeleteModeOn(this)" ondblclick="divDblClick(this);" style="transform: translate(50px, 200px)" class="node" id="bc">bc</div>
+  <div onclick="deleteIfDeleteModeOn(this)" ondblclick="divDblClick(this);" style="transform: translate(250px, 360px)" class="node" id="d">d</div>
+
+</div>
+
+<script>
+/* this code deletes courses :( */
+var deleteMode = false;
+document.addEventListener('keydown', function(event) {
+    const key = event.key; // const {key} = event; ES6+
+    if (key == "Delete" || key == "Backspace") {
+        deleteMode = true;
+    }
+});
+document.addEventListener('keyup', function(event) {
+    const key = event.key; // const {key} = event; ES6+
+    if (key == "Delete" || key == "Backspace") {
+        deleteMode = false;
+    }
+});
+function deleteIfDeleteModeOn(target) {
+  if (deleteMode == true) {
+    target.remove();
+  }
+}
+/* end delete course :( */
+function addNode(nodeName, X, Y) {
+  let stage = document.getElementById('stage'); 
+  let newNode = document.createElement('div');
+  newNode.setAttribute("ondblclick", "divDblClick(this);");
+  newNode.setAttribute("style", "transform: translateY(" + Y + "px)");
+	newNode.setAttribute("style", "transform: translateX(" + X + "px)");
+  newNode.setAttribute("class", "node");
+  newNode.setAttribute("id", nodeName)
+  newNode.addEventListener('click', function() {
+    if (deleteMode == true) {
+      newNode.remove();
+      return;
+    }
+  });
+  newNode.innerHTML = nodeName;
+	fetch("../data/user.json")
+  .then(response => response.json())
+  .then(json => {
+    json['CoursesTaken'].map( val => {
+			if(val == nodeName)
+			{
+				newNode.style.backgroundColor = "green";
+			}
+		});
+  });
+  stage.appendChild(newNode);
+  new PlainDraggable(newNode, {
+    containment: {left: 20, top: 20, width: 1000, height: 600}
+  }); 
+}
+window.addEventListener('load', function() {
+  'use strict';
+  var targeta = document.getElementById('a');
+  var targetbc = document.getElementById('bc');
+  var targetd = document.getElementById('d');
+  var line1;
+  var line2;
+  var nodea = new PlainDraggable(targeta);
+  nodea.containment = {left: 20, top: 20, width: 1000, height: 1000};
+  nodea.onMove = function() { line1.position(); };
+  var nodebc = new PlainDraggable(targetbc);
+  nodebc.containment = {left: 20, top: 20, width: 1000, height: 1000};
+  nodebc.onMove = function() { line1.position(); line2.position(); };
+  var noded = new PlainDraggable(targetd);
+  noded.containment = {left: 20, top: 20, width: 1000, height: 1000};
+  noded.onMove = function() { line2.position(); };
+  line1 = new LeaderLine(targeta, targetbc);
+  line2 = new LeaderLine(targetbc, targetd);
+});
+function divDblClick(target){
+  var course = this.innerHTML;
+  var new_course = prompt("Please enter a course name",course);
+  if (new_course != null && new_course != '' && new_course != 'undefined') {
+  	document.getElementById(target.id).innerHTML = new_course;
+  }
+	var has_taken_class = confirm("Have you taken this class?")
+	if(has_taken_class == true)
+		{
+			document.getElementById(target.id).style.backgroundColor = "green";
+		}
+}
+/*
+  This bit is used for creating Course on triple tap
+  :) start
+  problem: all courses created here have id='e'
+*/
+window.addEventListener('click', function (evt) {
+    if (evt.detail === 3) {
+      var x = evt.clientX;
+      var y = evt.clientY;
+      createCourse(x, y);
+    }
+});
+function createCourse(x, y) {
+  var course = document.createElement('div');
+  course.innerHTML = "New Course";
+  course.id = "e";
+  course.className = "node";
+  //this line dblclick not working
+  course.addEventListener('dblclick', function() {
+    var new_course = prompt("Please enter a course name", course.innerHTML);
+    if (new_course != null && new_course != '' && new_course != 'undefined') {
+      course.innerHTML = new_course;
+    }
+  });
+  course.addEventListener('click', function() {
+    if (deleteMode == true) {
+      course.remove();
+      return;
+    }
+  });
+  course.style.transform = "translate("+x+"px, "+y+"px)";
+  // node.transform = "translate("+x+"px, "+y+"px)";
+  document.getElementById('stage').appendChild(course);
+  var nodee = new PlainDraggable(course);
+  nodee.containment = {left: 20, top: 20, width: 1000, height: 600};
+}
+/* :) end */
+</script>
